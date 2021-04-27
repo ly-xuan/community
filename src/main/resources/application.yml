@@ -1,0 +1,109 @@
+# Server
+server:
+  port: 8080
+  servlet:
+    context-path: /community
+
+# Thymeleaf
+spring:
+  thymeleaf:
+    cache: false
+  # 选择运行模式
+  profiles:
+    active: dev
+  application:
+    name: community
+  # DataSource
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/community?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+      username: root
+      password: liuyixuan24
+      initialSize: 1
+      minIdle: 3
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 30000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,slf4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      stat-view-servlet:
+        enabled: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+#    Mail邮件
+  mail:
+    host: smtp.sina.com
+    port: 465
+    username: ly_xuan24@sina.com
+#    是授权码，不是密码
+    password: 2c260854607d2d5e
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+#  redis
+  redis:
+    database: 1
+    host: localhost
+    port: 6379
+
+#  kafka
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: community-consumer-group
+      enable-auto-commit: true
+      auto-commit-interval: 3000
+
+#功能不够用，详情请看 logback-spring.xml
+#logging:
+#  level:
+#    com.liu.commutity: info
+#  file:
+#    path: C:/Users/Administrator/Desktop/idea workplace/community/src/main/resources/log/community.log
+
+mybatis:
+# Mapper.xml扫描路径
+#  resources目录下 :
+#  mapper-locations: classpath*:mapper/*Mapper.xml
+#  -----------------
+#  java目录下 :
+#  <!--修改pom文件中<build>加上此resources即可解决-->
+#  <resources>
+#  <resource>
+#  <directory>src/main/java</directory>
+#  <includes>
+#  <include>**/*.xml</include>
+#  </includes>
+#  </resource>
+#  </resources>
+
+  mapper-locations: classpath*:**/mapper/*Mapper.xml
+
+  # 设置实体别名，用于xml填写sql语句传入返回类型简便
+  type-aliases-package: com.liu.community.entity
+  configuration:
+    # 用于执行增加sl记录后返回自增的主键
+    use-generated-keys: true
+    # 开启驼峰映射
+    map-underscore-to-camel-case: true
+
+# community
+community:
+  path:
+    domain: http://localhost:8080
+    upload: d:/work/data/upload
+
